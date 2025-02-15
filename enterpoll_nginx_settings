@@ -3,7 +3,7 @@ server {
     server_name enterpoll.ivanefremov.space;
     
     location /static/ {
-        root /home/enterpoll.ivanefremov.space/mysite;
+        root /home/ivan/enterpoll.ivanefremov.space/mysite;
     }
     location / {
         include proxy_params;
