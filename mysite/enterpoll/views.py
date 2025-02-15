@@ -38,7 +38,7 @@ class DeleteView(DeleteView):
 class LoginView(LoginView):
 
 	template_name = 'enterpoll/login.html'
-	next_page = reverse_lazy('polls_list')
+	next_page = reverse_lazy('poll_list')
 
 def logout(request):
 
@@ -131,7 +131,7 @@ class PollsListView(ListView):
 	paginate_by = 10
 	page_kwarg = 'page_number'
 	context_object_name = 'polls'
-	template_name = 'enterpoll/polls_list.html'
+	template_name = 'enterpoll/poll_list.html'
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
