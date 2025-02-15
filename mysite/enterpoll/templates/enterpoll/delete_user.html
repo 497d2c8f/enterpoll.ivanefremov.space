@@ -1,0 +1,12 @@
+{% extends "enterpoll/base.html" %}
+
+{% block title %}Удаление аккаунта{% endblock title %}
+{% block h1 %}Удаление аккаунта{% endblock h1 %}
+{% block content %}
+	<p>Вы действительно хотите удалить свой аккаунт?</p>
+	<form method="post">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<input type="submit" value="Да, я хочу удалить аккаунт">
+	</form>
+{% endblock content %}

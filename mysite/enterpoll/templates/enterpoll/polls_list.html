@@ -1,0 +1,34 @@
+{% extends "enterpoll/base.html" %}
+
+{% load pagination %}
+
+{% block title %}Список опросов{% endblock title %}
+{% block h1 %}Список опросов{% endblock h1 %}
+{% block content %}
+	{% if polls %}
+		{% pagination page_kwarg page_obj %}
+		<p></p>
+		<table>
+			<thead>
+				<tr>
+					<th>Опрос</th>
+					<th>Описание</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for poll in page_obj %}
+					<tr>
+						<td>
+							<a href="{% url 'poll_page' poll.pk %}">{{ poll.title }}</a>
+						</td>
+						<td>
+							{{ poll.description }}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<p>Опросы отсутствуют.</p>
+	{% endif %}
+{% endblock content %}

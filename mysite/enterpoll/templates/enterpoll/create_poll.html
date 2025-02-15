@@ -1,0 +1,18 @@
+{% extends "enterpoll/base.html" %}
+
+{% block title %}Создать опрос{% endblock title %}
+{% block h1 %}Создать опрос{% endblock h1 %}
+{% block content %}
+	<form method="GET">
+		<label for="choices_number">Количество вариантов ответа (от 2 до 10):</label>
+		<input type="number" id="choices_number" name="choices_number" value="{{ request.GET.choices_number|default:2 }}" min="2" max="10" required>
+		<input type="submit" value="Применить">
+	</form>
+	<form method="POST">
+		{% csrf_token %}
+		{{ poll_modelform.as_p }}
+		<p>Варианты ответа:</p>
+		{{ choice_modelformset.as_p }}
+		<input type="submit" value="Создать опрос">
+	</form>
+{% endblock content %}

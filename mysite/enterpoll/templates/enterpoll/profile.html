@@ -1,0 +1,131 @@
+{% extends "enterpoll/base.html" %}
+
+{% load pagination %}
+
+{% block title %}Профиль{% endblock title %}
+{% block h1 %}Профиль{% endblock h1 %}
+{% block content %}
+	<p>Имя пользователя: {{ user.username }}</p>
+	<p>Пароль: <a href="{% url 'password_change' user.pk %}">Сменить пароль</a></p>
+	<p><a href="{% url 'delete_user' user.pk %}">Удалить аккаунт</a></p>
+	<h2>Созданные опросы</h2>
+	{% if user_polls %}
+		{% pagination user_polls_page_kwarg user_polls_page_obj %}
+		<table>
+			<thead>
+				<tr>
+					<th>Опрос</th>
+					<th>Описание</th>
+					<th>Дата</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for poll in user_polls_page_obj %}
+					<tr>
+						<td>
+							<a href="{% url 'poll_page' poll.pk %}">{{ poll.title }}</a>
+						</td>
+						<td>
+							{{ poll.description }}
+						</td>
+						<td>
+							{{ poll.created|date:"Y.m.d H:i:s e" }}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<p>Отсутствуют.</p>
+	{% endif %}
+	<h2>Голоса</h2>
+	{% if user_votes %}
+		{% pagination user_votes_page_kwarg user_votes_page_obj %}
+		<table>
+			<thead>
+				<tr>
+					<th>Опрос</th>
+					<th>Вариант ответа</th>
+					<th>Дата</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for vote in user_votes_page_obj %}
+					<tr>
+						<td>
+							<a href="{% url 'poll_page' vote.poll.pk %}">{{ vote.poll.title }}</a>
+						</td>
+						<td>
+							{{ vote.choice.text }}
+						</td>
+						<td>
+							{{ vote.created|date:"Y.m.d H:i:s e" }}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<p>Отсутствуют.</p>
+	{% endif %}
+	<h2>Оценки</h2>
+	{% if user_ratings %}
+		{% pagination user_ratings_page_kwarg user_ratings_page_obj %}
+		<table>
+			<thead>
+				<tr>
+					<th>Опрос</th>
+					<th>Оценка</th>
+					<th>Дата</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for rating in user_ratings_page_obj %}
+					<tr>
+						<td>
+							<a href="{% url 'poll_page' rating.poll.pk %}">{{ rating.poll.title }}</a>
+						</td>
+						<td>
+							{{ rating.value }}
+						</td>
+						<td>
+							{{ rating.created|date:"Y.m.d H:i:s e" }}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<p>Отсутствуют.</p>
+	{% endif %}
+	<h2>Комментарии</h2>
+	{% if user_comments %}
+		{% pagination user_comments_page_kwarg user_comments_page_obj %}
+		<table>
+			<thead>
+				<tr>
+					<th>Опрос</th>
+					<th>Комментарий</th>
+					<th>Дата</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for comment in user_comments_page_obj %}
+					<tr>
+						<td>
+							<a href="{% url 'poll_page' comment.poll.pk %}">{{ comment.poll.title }}</a>
+						</td>
+						<td>
+							{{ comment.text }}
+						</td>
+						<td>
+							{{ comment.created|date:"Y.m.d H:i:s e" }}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<p>Отсутствуют.</p>
+	{% endif %}
+{% endblock content %}

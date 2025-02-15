@@ -1,0 +1,72 @@
+{% extends "enterpoll/base.html" %}
+
+{% load static %}
+
+{% block title %}EnterPoll{% endblock title %}
+{% block h1 %}EnterPoll{% endblock h1 %}
+{% block content %}
+	<img src="{% static 'polls/ivan.jpg' %}" alt="women" width="10%">
+	<h2>Популярные опросы</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>Опрос</th>
+				<th>Количество голосов</th>
+			</tr>
+		</thead>
+		<tbody>
+				{% for poll in most_popular_polls %}
+					<tr>
+						<td>
+							<a href="{% url 'poll_page' poll.pk %}">{{ poll.title }}</a>
+						</td>
+						<td>
+							{{ poll.number_of_votes }}
+						</td>
+					</tr>
+				{% endfor %}
+		</tbody>
+	</table>
+	<h2>Лучшие опросы</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>Опрос</th>
+				<th>Рейтинг</th>
+			</tr>
+		</thead>
+		<tbody>
+				{% for poll in highly_rated_polls %}
+					<tr>
+						<td>
+							<a href="{% url 'poll_page' poll.pk %}">{{ poll.title }}</a>
+						</td>
+						<td>
+							{{ poll.average_rating|floatformat:2 }}
+						</td>
+					</tr>
+				{% endfor %}
+		</tbody>
+	</table>
+	<h2>Новые опросы</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>Опрос</th>
+				<th>Дата создания</th>
+			</tr>
+		</thead>
+		<tbody>
+				{% for poll in latest_polls %}
+					<tr>
+						<td>
+							<a href="{% url 'poll_page' poll.pk %}">{{ poll.title }}</a>
+						</td>
+						<td>
+							{{ poll.created|date:"Y.m.d H:i:s e" }}
+						</td>
+					</tr>
+				{% endfor %}
+		</tbody>
+	</table>
+{% endblock content %}

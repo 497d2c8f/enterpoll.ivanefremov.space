@@ -1,0 +1,91 @@
+{% extends "enterpoll/base.html" %}
+
+{% load pagination %}
+
+{% block title %}{{ poll.title }}{% endblock title %}
+{% block h1 %}{{ poll.title }}{% endblock h1 %}
+{% block content %}
+	<ul>
+		{% for choice in poll.choice_set.all %}
+			<li>
+				<form method="POST">
+					{% csrf_token %}
+					{% if choice == user_choice %}
+						<input type="text" name="action_type" value="delete_vote" hidden>
+						<input type="text" name="choice_pk" value="{{ choice.pk }}" hidden>
+						<input class="selected_choice" type="submit" value="{{ choice.text }} ({{ choice.number_of_votes }})">
+					{% else %}
+						<input type="text" name="action_type" value="vote" hidden>
+						<input type="text" name="choice_pk" value="{{ choice.pk }}" hidden>
+						<input type="submit" value="{{ choice.text }} ({{ choice.number_of_votes }})">
+					{% endif %}
+				</form>
+			</li>
+		{% endfor %}
+	</ul>
+	<p>Описание: {{ poll.description|default:"..." }}</p>
+	<p>Количество голосов: {{ poll.number_of_votes }}</p>
+	<p>Автор: {{ poll.user }}</p>
+	<p>Дата создания: {{ poll.created|date:"Y.m.d H:i:s e" }}</p>
+	<p>
+		Рейтинг: {{ poll.average_rating|floatformat:1 }} (Всего оценок: {{ poll.number_of_ratings }})<br>
+		<div style="display: inline-block">
+		{% spaceless %}
+		Оценить:
+			{% for x in '12345' %}
+				<div style="display: inline-block">
+					<form method="POST">
+						{% csrf_token %}
+						{% if user_rating.value == x|add:"0" %}
+							<input type="text" name="action_type" value="delete_rating" hidden>
+							<input class="selected_rating" type="submit" name="rating_value" value="{{ x }}">
+						{% else %}
+							<input type="text" name="action_type" value="rate" hidden>
+							<input type="submit" name="rating_value" value="{{ x }}">
+						{% endif %}
+					</form>
+				</div>
+			{% endfor %}
+		{% endspaceless %}
+		</div>
+	</p>
+	{% if poll.user == user %}
+		<form method="POST">
+			{% csrf_token %}
+			<input type="text" name="action_type" value="delete_poll" hidden>
+			<input type="submit" value="Удалить опрос">
+		</form>
+	{% endif %}
+	<h3>Комментарии ({{ poll.number_of_comments }}):</h3>
+	{% pagination comments_page_kwarg comments_page_obj %}
+	<form method="POST">
+		{% csrf_token %}
+		<p>{{ comment_modelform.as_p }}</p>
+		<input type="text" name="action_type" value="comment" hidden>
+		<input type="submit" value="Отправить">
+	</form>
+	<ul>
+		{% for comment in comments_page_obj %}
+			<li>
+				{{ comment.user }} ({{ comment.created|date:"Y.m.d H:i:s e" }})
+				{% if comment.user == user %}
+					<div style="display: inline-block">
+						<form method="POST">
+							{% csrf_token %}
+								<input type="text" name="action_type" value="delete_comment" hidden>
+								<input type="text" name="comment_pk" value="{{ comment.pk }}" hidden>
+								<input type="submit" value="Удалить">
+						</form>
+					</div>
+				{% endif %}
+				<br>
+				&emsp;{{ comment.text }}
+			</li>
+			<br>
+		{% empty %}
+			<li>
+				Комментарии отсутствуют.
+			</li>
+		{% endfor %}
+	</ul>
+{% endblock content %}

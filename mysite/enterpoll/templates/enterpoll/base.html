@@ -1,0 +1,42 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			{% block title %}
+				block title
+			{% endblock title %}
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link type="text/css" href="{% static 'css/style.css' %}" rel="stylesheet"/>
+		<link rel="icon" href="{% static 'favicon.ico' %}">
+	</head>
+	<body>
+		<div>
+			{% block table_of_contents %}
+				<p>
+					{% if user.is_superuser %}
+						<a class="table_of_contents" href="{% url 'admin:index' %}">Админ-панель</a>
+					{% endif %}
+					<a class="table_of_contents" href="{% url 'main_page' %}">Главная страница</a>
+					<a class="table_of_contents" href="{% url 'registration' %}">Регистрация</a>
+					<a class="table_of_contents" href="{% url 'login' %}">Вход</a>
+					{% if user.is_authenticated %}
+						<a class="table_of_contents" href="{% url 'logout' %}">Выход</a>
+						<a class="table_of_contents" href="{% url 'profile' user.pk %}">Профиль</a>
+						<a class="table_of_contents" href="{% url 'create_poll' %}">Создать опрос</a>
+					{% endif %}
+					<a class="table_of_contents" href="{% url 'poll_list' %}">Список опросов</a>
+					<a class="table_of_contents" href="{% url 'random_poll_page' %}">Случайный опрос</a>
+				</p>
+			{% endblock table_of_contents %}
+		</div>
+		<div>
+			<h1>{% block h1 %}block h1{% endblock h1 %}</h1>
+		</div>
+		<div>
+			{% block content %}block content{% endblock content %}
+		</div>
+	</body>
+</html>
